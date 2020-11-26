@@ -31,6 +31,6 @@ public class GoodsPage extends ScannerChoice{
         {
             System.out.println("添加商品失败");
         }
-        System.exit(0);
+        System.exit(1);
     }
 }
