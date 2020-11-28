@@ -1,5 +1,8 @@
 package zhou.tool;
 
+import zhou.page.GoodsPage;
+import zhou.page.MainPage;
+
 import java.util.Scanner;
 
 public class ScannerChoice {
@@ -53,6 +56,23 @@ public class ScannerChoice {
             break;
         } while (true);
         return num;
+    }
+
+    public static void changedInfoNext(String next) {
+        while(true) {
+            System.out.println("是否继续进行-当前操作:(Y/N)");
+            String choice = scannerInfoString();
+
+            if("Y".equals(choice.toUpperCase())) {
+                if("addGoodsPage".equals(next)) {
+                    GoodsPage.addGoodsPage();
+                }
+            }
+            else if("N".equals(choice.toUpperCase())) {
+                MainPage.maintenancePage();
+            }
+            System.out.println("\n输入有误！请重新输入.");
+        }
     }
 
 }
