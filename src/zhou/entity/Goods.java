@@ -30,7 +30,7 @@ public class Goods {
     {
         this.gid = gid;
     }
-    public String getGoogName()
+    public String getGoodName()
     {
         return goodName;
     }

@@ -89,7 +89,7 @@ public class MainPage extends ScannerChoice{
                         //查询商品
                         break;
                     case 5:
-                        //显示所有商品
+                        GoodsPage.displayGoodsPage();
                         break;
                     default:
                         break;
