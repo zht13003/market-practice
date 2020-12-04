@@ -12,7 +12,7 @@ import java.util.ArrayList;
 public class GoodsPage extends ScannerChoice{
 
     /**
-     * 添加商品
+     * 添加商品页面
      */
     public static void addGoodsPage() {
         System.out.println("\t正在执行添加商品操作\n");
@@ -38,6 +38,28 @@ public class GoodsPage extends ScannerChoice{
         }
 
         changedInfoNext("addGoodsPage");
+    }
+
+    /**
+     * 更新商品页面
+     */
+    public static void updateGoodsPage() {
+        System.out.println("\t正在执行 更改商品 操作\n");
+        System.out.println("请输入想要更改的商品名字");
+    }
+
+    /**
+     * 删除商品页面
+     */
+    public static void deleteGoodsPage() {
+
+    }
+
+    /**
+     * 查询商品页面
+     */
+    public static void queryGoodsPage() {
+
     }
 
     /**

@@ -80,13 +80,13 @@ public class MainPage extends ScannerChoice{
                         GoodsPage.addGoodsPage();
                         break;
                     case 2:
-                        //更改商品
+                        GoodsPage.updateGoodsPage();
                         break;
                     case 3:
-                        //删除商品
+                        GoodsPage.deleteGoodsPage();
                         break;
                     case 4:
-                        //查询商品
+                        GoodsPage.queryGoodsPage();
                         break;
                     case 5:
                         GoodsPage.displayGoodsPage();
