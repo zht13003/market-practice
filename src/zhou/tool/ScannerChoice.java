@@ -5,6 +5,9 @@ import zhou.page.MainPage;
 
 import java.util.Scanner;
 
+/**
+ * @author zhouh
+ */
 public class ScannerChoice {
     public static String scannerInfoString() {
         Scanner scanner = new Scanner(System.in);
@@ -66,6 +69,9 @@ public class ScannerChoice {
             if("Y".equals(choice.toUpperCase())) {
                 if("addGoodsPage".equals(next)) {
                     GoodsPage.addGoodsPage();
+                }
+                if("updateGoodsPage".equals(next)) {
+                    GoodsPage.updateGoodsPage();
                 }
             }
             else if("N".equals(choice.toUpperCase())) {

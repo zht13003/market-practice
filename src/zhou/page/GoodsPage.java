@@ -1,4 +1,5 @@
 package zhou.page;
+import zhou.tool.QueryPrint;
 import zhou.tool.ScannerChoice;
 import zhou.Dao.GoodsDao;
 import zhou.entity.Goods;
@@ -46,6 +47,61 @@ public class GoodsPage extends ScannerChoice{
     public static void updateGoodsPage() {
         System.out.println("\t正在执行 更改商品 操作\n");
         System.out.println("请输入想要更改的商品名字");
+
+        int gid = QueryPrint.query("updateGoodsPage");
+
+        System.out.println("\n--------请选择您要更改的内容\n");
+        System.out.println("\t1.更改商品-名称");
+        System.out.println("\t2.更改商品-价格");
+        System.out.println("\t3.更改商品-数量");
+        System.out.println("\n请输入选项,或者按0返回上一级菜单.");
+
+        out:while(true) {
+            String choice = scannerInfoString();
+            String regex = "[0-3]";
+            Goods goods = null;
+            boolean success;
+
+            if(choice.matches(regex)) {
+                int info = Integer.parseInt(choice);
+                switch (info) {
+                    case 0:
+                        MainPage.maintenancePage();
+                        break;
+                    case 1:
+                        System.out.println("请输入商品-新名称");
+                        String goodName = scannerInfoString();
+                        goods = new Goods(gid, goodName);
+                        break;
+                    case 2:
+                        System.out.println("请输入商品-新价格");
+                        double goodPrice = scannerInfo();
+                        goods = new Goods(gid, goodPrice);
+                        break;
+                    case 3:
+                        System.out.println("请输入商品-新数量");
+                        int goodNum = scannerNum();
+                        goods = new Goods(gid, goodNum);
+                        break;
+                    default:
+                        System.out.println("请输入正确的选择！");
+                        break out;
+                }
+
+                success = new GoodsDao().updateGoods(info, goods);
+                if (success)
+                {
+                    System.out.println("\n\t！！成功更新商品至数据库！！\n");
+                }else
+                {
+                    System.err.println("\n\t！！更新商品失敗！！");
+                }
+                changedInfoNext("updateGoodsPage");
+            }
+
+            System.err.println("！输入有误！");
+            System.out.println("请重新选择,或者按0返回上一级菜单.");
+        }
     }
 
     /**

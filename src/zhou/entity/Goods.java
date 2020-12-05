@@ -22,6 +22,28 @@ public class Goods {
         this.goodNum 	= goodNum;
     }
 
+    public Goods(int gid,String goodName,double goodPrice,int goodNum) {
+        this.gid = gid;
+        this.goodName  = goodName;
+        this.goodPrice = goodPrice;
+        this.goodNum 	= goodNum;
+    }
+
+    public Goods(int gid,String goodName) {
+        this.gid = gid;
+        this.goodName  = goodName;
+    }
+
+    public Goods(int gid,double goodPrice) {
+        this.gid = gid;
+        this.goodPrice = goodPrice;
+    }
+
+    public Goods(int gid,int goodNum) {
+        this.gid = gid;
+        this.goodNum 	= goodNum;
+    }
+
     public int getGid()
     {
         return gid;
