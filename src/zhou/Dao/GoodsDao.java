@@ -14,7 +14,7 @@ import java.util.ArrayList;
  */
 public class GoodsDao {
 
-    Connection conn  = null;
+    Connection conn = DatabaseConnect.getConnection();
     PreparedStatement pstmt = null;
     ResultSet rs = null;
 
@@ -23,11 +23,6 @@ public class GoodsDao {
      */
     public boolean addGoods(Goods goods) {
         boolean success = false;
-
-        //存在多个表时，此处需要更改
-        if(this.conn == null) {
-            conn = DatabaseConnect.getConnection();
-        }
 
         String sql = "INSERT INTO GOODS(GNAME,GPRICE,GNUM) VALUES(?,?,?)";
         try
@@ -55,9 +50,7 @@ public class GoodsDao {
      */
     public ArrayList<Goods> displayGoods() {
         ArrayList<Goods> goodsList = new ArrayList<>();
-        if(this.conn == null) {
-            conn = DatabaseConnect.getConnection();
-        }
+
         String sql = "SELECT * FROM GOODS";
 
         try {
@@ -76,8 +69,6 @@ public class GoodsDao {
             }
         } catch (Exception e) {
             System.out.println(e);
-        } finally {
-            DatebaseClose.queryClose(pstmt, rs, conn);
         }
         return goodsList;
     }
@@ -90,9 +81,6 @@ public class GoodsDao {
      */
     public boolean updateGoods(int key, Goods goods) {
         boolean bool = false;
-        if(this.conn == null) {
-            conn = DatabaseConnect.getConnection();
-        }
 
         String sql;
         try {
@@ -123,8 +111,6 @@ public class GoodsDao {
             }
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            DatebaseClose.addClose(pstmt, conn);
         }
         return bool;
     }
@@ -136,9 +122,7 @@ public class GoodsDao {
      */
     public boolean deleteGoods(int gid) {
         boolean bool = false;
-        if(this.conn == null) {
-            conn = DatabaseConnect.getConnection();
-        }
+
         String sql = "DELETE FROM GOODS WHERE GID=?";
 
         try
@@ -153,9 +137,11 @@ public class GoodsDao {
         } catch (Exception e)
         {
             e.printStackTrace();
-        }finally{
-            DatebaseClose.addClose(pstmt,conn);
         }
         return bool;
+    }
+
+    public void closeConnection() {
+        DatebaseClose.addClose(pstmt, conn);
     }
 }

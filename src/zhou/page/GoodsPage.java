@@ -13,6 +13,11 @@ import java.util.ArrayList;
 public class GoodsPage extends ScannerChoice{
 
     /**
+     * 数据库操作对象
+     */
+    private static GoodsDao goodsDao = new GoodsDao();
+
+    /**
      * 添加商品页面
      */
     public static void addGoodsPage() {
@@ -28,7 +33,7 @@ public class GoodsPage extends ScannerChoice{
         int goodsNumber = scannerNum();
 
         Goods good = new Goods(goodsName, goodsPrice, goodsNumber);
-        boolean success = new GoodsDao().addGoods(good);
+        boolean success = goodsDao.addGoods(good);
 
         if (success)
         {
@@ -88,7 +93,7 @@ public class GoodsPage extends ScannerChoice{
                         break out;
                 }
 
-                success = new GoodsDao().updateGoods(info, goods);
+                success = goodsDao.updateGoods(info, goods);
                 if (success)
                 {
                     System.out.println("\n\t！！成功更新商品至数据库！！\n");
@@ -118,7 +123,7 @@ public class GoodsPage extends ScannerChoice{
             String choice = scannerInfoString();
 
             if ("y".equals(choice) || "Y".equals(choice)) {
-                boolean success = new GoodsDao().deleteGoods(gid);
+                boolean success = goodsDao.deleteGoods(gid);
                 if(success) {
                     System.err.println("\t！！已成功刪除该商品！！\n");
                 }
@@ -146,7 +151,7 @@ public class GoodsPage extends ScannerChoice{
      */
     public static void displayGoodsPage() {
         System.out.println("\t\t\t\t\t所有商品列表\n\n");
-        ArrayList<Goods> goodsList = new GoodsDao().displayGoods();
+        ArrayList<Goods> goodsList = goodsDao.displayGoods();
 
         if(goodsList.size() <= 0) {
             System.err.println("！库存为空！");
@@ -183,5 +188,9 @@ public class GoodsPage extends ScannerChoice{
                 System.out.println("输入有误！");
             }
         }
+    }
+
+    public static void close() {
+        goodsDao.closeConnection();
     }
 }

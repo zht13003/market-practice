@@ -14,7 +14,7 @@ import zhou.entity.Goods;
  * @author zhouh
  */
 public final class QueryPrint {
-    Connection conn  = null;
+    Connection conn  = DatabaseConnect.getConnection();
     PreparedStatement pstmt = null;
     ResultSet rs = null;
 
@@ -26,9 +26,6 @@ public final class QueryPrint {
      */
     public ArrayList<Goods> queryGoodsKey(int goodID, String goodName) {
         ArrayList<Goods> goodsList = new ArrayList<>();
-        if(this.conn == null) {
-            conn = DatabaseConnect.getConnection();
-        }
 
         String sql = "SELECT * FROM GOODS WHERE GID=? OR GNAME=?";
 
@@ -49,8 +46,6 @@ public final class QueryPrint {
             }
         } catch (Exception e) {
             e.printStackTrace();
-        } finally {
-            DatebaseClose.queryClose(pstmt, rs, conn);
         }
         return goodsList;
     }

@@ -29,6 +29,7 @@ public class MainPage extends ScannerChoice{
                     case 0:
                         System.out.println("------------------");
                         System.out.println("您已经退出系统!");
+                        GoodsPage.close();
                         System.exit(1);
                         break;
                     case 1:
