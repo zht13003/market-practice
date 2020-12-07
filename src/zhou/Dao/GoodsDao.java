@@ -128,4 +128,34 @@ public class GoodsDao {
         }
         return bool;
     }
+
+    /**
+     * 删除商品
+     * @param gid
+     * @return
+     */
+    public boolean deleteGoods(int gid) {
+        boolean bool = false;
+        if(this.conn == null) {
+            conn = DatabaseConnect.getConnection();
+        }
+        String sql = "DELETE FROM GOODS WHERE GID=?";
+
+        try
+        {
+            pstmt = conn.prepareStatement(sql);
+            pstmt.setInt(1,gid);
+            int rs = pstmt.executeUpdate();
+            if (rs > 0)
+            {
+                bool = true;
+            }
+        } catch (Exception e)
+        {
+            e.printStackTrace();
+        }finally{
+            DatebaseClose.addClose(pstmt,conn);
+        }
+        return bool;
+    }
 }

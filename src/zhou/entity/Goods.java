@@ -5,7 +5,9 @@ package zhou.entity;
  * @author zhouh
  */
 public class Goods {
-    //数据库Goods表主鍵
+    /**
+     * 数据库Goods表主鍵
+     */
     private int gid;
     private String goodName;
     private double goodPrice;

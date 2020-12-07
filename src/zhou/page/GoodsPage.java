@@ -108,7 +108,30 @@ public class GoodsPage extends ScannerChoice{
      * 删除商品页面
      */
     public static void deleteGoodsPage() {
+        System.out.println("\t正在执行 删除商品 操作\n");
+        System.out.println("请输入想要删除的商品名字");
 
+        int gid = QueryPrint.query("deleteGoodsPage");
+
+        while(true) {
+            System.out.println("\n确认删除该商品：Y/N");
+            String choice = scannerInfoString();
+
+            if ("y".equals(choice) || "Y".equals(choice)) {
+                boolean success = new GoodsDao().deleteGoods(gid);
+                if(success) {
+                    System.err.println("\t！！已成功刪除该商品！！\n");
+                }
+                else {
+                    System.err.println("\n\t！！刪除该商品失敗！！");
+                }
+                changedInfoNext("deleteGoodsPage");
+            }
+            else {
+                MainPage.maintenancePage();
+            }
+            System.out.println("\t!!输入有误,请重新输入!!\n");
+        }
     }
 
     /**

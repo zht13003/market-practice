@@ -73,6 +73,9 @@ public class ScannerChoice {
                 if("updateGoodsPage".equals(next)) {
                     GoodsPage.updateGoodsPage();
                 }
+                if("deleteGoodsPage".equals(next)) {
+                    GoodsPage.deleteGoodsPage();
+                }
             }
             else if("N".equals(choice.toUpperCase())) {
                 MainPage.maintenancePage();
