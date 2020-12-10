@@ -3,6 +3,7 @@ package zhou.Dao;
 import zhou.entity.Goods;
 import zhou.database.DatabaseConnect;
 import zhou.database.DatebaseClose;
+import zhou.tool.ScannerChoice;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -139,6 +140,43 @@ public class GoodsDao {
             e.printStackTrace();
         }
         return bool;
+    }
+
+    /**
+     * 查询商品
+     * @param key
+     * @return
+     */
+    public ArrayList<Goods> queryGoods(int key) {
+        ArrayList<Goods> goodsList = new ArrayList<>();
+        String sql = "SELECT * FROM GOODS ";
+        try {
+
+            if (key == 1) {
+                sql += "ORDER BY GNUM ASC";
+            }
+            if(key == 2) {
+                sql += "ORDER BY GPRICE ASC";
+            }
+            if(key == 3) {
+                String nameGet = ScannerChoice.scannerInfoString();
+                sql += "WHERE GNAME LIKE '%" + nameGet + "%'";
+            }
+            pstmt = conn.prepareStatement(sql);
+            rs = pstmt.executeQuery();
+            while(rs.next()) {
+                int gid = rs.getInt("gid");
+                String gname = rs.getString(2);
+                double gprice = rs.getDouble(3);
+                int gnum = rs.getInt(4);
+
+                Goods goods = new Goods(gid, gname, gprice, gnum);
+                goodsList.add(goods);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return goodsList;
     }
 
     public void closeConnection() {

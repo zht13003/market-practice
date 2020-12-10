@@ -14,6 +14,8 @@ public class GoodsPage extends ScannerChoice{
 
     /**
      * 数据库操作对象
+     * 在对象GoodsPage被初始化时，静态对象goodsDao被初始化
+     * 在调用GoodsPage的静态方法前，GoodsPage被初始化
      */
     private static GoodsDao goodsDao = new GoodsDao();
 
@@ -143,7 +145,69 @@ public class GoodsPage extends ScannerChoice{
      * 查询商品页面
      */
     public static void queryGoodsPage() {
+        System.out.println("\t\t  正在执行查询商品操作\n");
+        System.out.println("\t\t1.按照商品 数量升序 查询");
+        System.out.println("\t\t2.按照商品 价格升序 查询");
+        System.out.println("\t\t3.输入商品  关键字  查询");
+        System.out.println("\n请输入选项,或者按0返回上一级菜单.");
 
+        while(true) {
+            String info = scannerInfoString();
+            String regex = "[0-3]";
+            if(info.matches(regex)) {
+                int choice = Integer.parseInt(info);
+                if(choice == 0) {
+                    MainPage.maintenancePage();
+                }
+                if (choice == 3)
+                {
+                    System.out.println("\t\t正在执行商品  关键字  查询操作\n");
+                    System.out.println("\n请输入商品关键字");
+                }
+                ArrayList<Goods> goodsList = goodsDao.queryGoods(choice);
+                if (goodsList == null || goodsList.size() <= 0)
+                {
+                    System.err.println("\n\t!!您查询的商品不存在!!\n");
+                    queryGoodsPage();
+                }
+                System.out.println("\t\t\t\t\t商品列表\n\n");
+                System.out.println("\t商品编号\t\t商品名称\t\t商品价格\t\t商品数量\t\t备注\n");
+                for(int i = 0, length = goodsList.size(); i < length; i++) {
+                    Goods goods = goodsList.get(i);
+                    System.out.print("\t" + goods.getGid()+"\t\t" +
+                            goods.getGoodName() + "\t\t" +
+                            goods.getGoodPrice() + "\t\t" +
+                            goods.getGoodNum());
+                    int gnum = goods.getGoodNum();
+                    if (gnum ==0)
+                    {
+                        System.out.println("\t\t该商品已售空！");
+                    }
+                    else if (gnum<10)
+                    {
+                        System.out.println("\t\t该商品已不足10件");
+                    }
+                    else
+                    {
+                        System.out.println("\t\t-");
+                    }
+                    System.out.println("\t");
+                }
+                System.out.println("---------------------");
+                while(true) {
+                    System.out.println("输入 0 返回上一级菜单");
+                    String choiceNext = scannerInfoString();
+
+                    if ("0".equals(choiceNext))
+                    {
+                        MainPage.maintenancePage();
+                    }
+                    System.err.println("输入有误！");
+                }
+            }
+            System.err.println("输入有误！");
+            System.out.println("请重新选择,或者按0返回上一级菜单.");
+        }
     }
 
     /**
@@ -190,6 +254,9 @@ public class GoodsPage extends ScannerChoice{
         }
     }
 
+    /**
+     * 关闭数据库连接
+     */
     public static void close() {
         goodsDao.closeConnection();
     }
