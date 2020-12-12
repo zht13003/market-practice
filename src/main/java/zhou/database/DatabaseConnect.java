@@ -19,7 +19,7 @@ public class DatabaseConnect {
 
     public static SqlSession getSession() {
         if(session == null) {
-            String resource = "zhou/Mybatis-config.xml";
+            String resource = "Mybatis-config.xml";
             InputStream inputStream;
 
             {

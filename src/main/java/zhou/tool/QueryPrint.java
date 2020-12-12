@@ -5,7 +5,6 @@ import java.util.List;
 
 import org.apache.ibatis.session.SqlSession;
 import zhou.database.DatabaseConnect;
-import zhou.tool.ScannerChoice;
 import zhou.entity.Goods;
 
 /**
