@@ -1,7 +1,11 @@
 package zhou.page;
 
+import zhou.database.DatabaseConnect;
+import zhou.entity.Goods;
 import zhou.tool.ScannerChoice;
 import zhou.page.GoodsPage;
+
+
 /**
  * @author zhouh
  */

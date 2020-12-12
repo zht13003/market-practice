@@ -1,77 +1,34 @@
 package zhou.Dao;
 
+import org.apache.ibatis.session.SqlSession;
 import zhou.entity.Goods;
 import zhou.database.DatabaseConnect;
-import zhou.database.DatebaseClose;
 import zhou.tool.ScannerChoice;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author zhouh
  */
 public class GoodsDao {
 
-    Connection conn = DatabaseConnect.getConnection();
-    PreparedStatement pstmt = null;
-    ResultSet rs = null;
+    SqlSession session = DatabaseConnect.getSession();
 
     /**
      * 添加商品数据到goods表
      */
     public boolean addGoods(Goods goods) {
-        boolean success = false;
-
-        String sql = "INSERT INTO GOODS(GNAME,GPRICE,GNUM) VALUES(?,?,?)";
-        try
-        {
-            pstmt = conn.prepareStatement(sql);
-            pstmt.setString(1, goods.getGoodName());
-            pstmt.setDouble(2, goods.getGoodPrice());
-            pstmt.setInt(3, goods.getGoodNum());
-
-            int rs = pstmt.executeUpdate();
-            if (rs > 0)
-            {
-                success = true;
-            }
-        } catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-        return success;
+        session.insert("addGoods", goods);
+        return true;
     }
 
     /**
      * 显示所有商品信息
      * @return
      */
-    public ArrayList<Goods> displayGoods() {
-        ArrayList<Goods> goodsList = new ArrayList<>();
-
-        String sql = "SELECT * FROM GOODS";
-
-        try {
-            pstmt = conn.prepareStatement(sql);
-            rs 	  = pstmt.executeQuery();
-
-            while(rs.next()) {
-                //双引号+主键名,也可用数字表示.
-                int gid = rs.getInt(1);
-                String gname = rs.getString(2);
-                double gprice = rs.getDouble(3);
-                int gnum = rs.getInt(4);
-
-                Goods goods = new Goods(gname, gprice, gnum);
-                goodsList.add(goods);
-            }
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-        return goodsList;
+    public List<Goods> displayGoods() {
+        return session.selectList("listGoods");
     }
 
     /**
@@ -81,39 +38,20 @@ public class GoodsDao {
      * @return
      */
     public boolean updateGoods(int key, Goods goods) {
-        boolean bool = false;
-
-        String sql;
-        try {
-            switch (key) {
-                case 1:
-                    sql = "UPDATE GOODS SET GNAME=? WHERE GID=?";
-                    pstmt = conn.prepareStatement(sql);
-                    pstmt.setString(1, goods.getGoodName());
-                    break;
-                case 2:
-                    sql = "UPDATE GOODS SET GPRICE=? WHERE GID=?";
-                    pstmt = conn.prepareStatement(sql);
-                    pstmt.setDouble(1, goods.getGoodPrice());
-                    break;
-                case 3:
-                    sql = "UPDATE GOODS SET GNUM=? WHERE GID=?";
-                    pstmt = conn.prepareStatement(sql);
-                    pstmt.setDouble(1, goods.getGoodNum());
-                    break;
-                default:
-                    break;
-            }
-            pstmt.setInt(2,goods.getGid());
-
-            int rs = pstmt.executeUpdate();
-            if(rs > 0) {
-                bool = true;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+        switch (key) {
+            case 1:
+                session.update("updateGoodsName", goods);
+                break;
+            case 2:
+                session.update("updateGoodsPrice", goods);
+                break;
+            case 3:
+                session.update("updateGoodsNum", goods);
+                break;
+            default:
+                break;
         }
-        return bool;
+        return true;
     }
 
     /**
@@ -122,24 +60,8 @@ public class GoodsDao {
      * @return
      */
     public boolean deleteGoods(int gid) {
-        boolean bool = false;
-
-        String sql = "DELETE FROM GOODS WHERE GID=?";
-
-        try
-        {
-            pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1,gid);
-            int rs = pstmt.executeUpdate();
-            if (rs > 0)
-            {
-                bool = true;
-            }
-        } catch (Exception e)
-        {
-            e.printStackTrace();
-        }
-        return bool;
+        session.delete("deleteGoods", gid);
+        return true;
     }
 
     /**
@@ -147,39 +69,27 @@ public class GoodsDao {
      * @param key
      * @return
      */
-    public ArrayList<Goods> queryGoods(int key) {
-        ArrayList<Goods> goodsList = new ArrayList<>();
-        String sql = "SELECT * FROM GOODS ";
-        try {
-
-            if (key == 1) {
-                sql += "ORDER BY GNUM ASC";
-            }
-            if(key == 2) {
-                sql += "ORDER BY GPRICE ASC";
-            }
-            if(key == 3) {
+    public List<Goods> queryGoods(int key) {
+        List<Goods> goodsList = new ArrayList<>();
+        switch (key) {
+            case 1:
+                goodsList = session.selectList("queryGoodsByPriceOrNum", "good_num");
+                break;
+            case 2:
+                goodsList = session.selectList("queryGoodsByPriceOrNum", "good_price");
+                break;
+            case 3:
                 String nameGet = ScannerChoice.scannerInfoString();
-                sql += "WHERE GNAME LIKE '%" + nameGet + "%'";
-            }
-            pstmt = conn.prepareStatement(sql);
-            rs = pstmt.executeQuery();
-            while(rs.next()) {
-                int gid = rs.getInt("gid");
-                String gname = rs.getString(2);
-                double gprice = rs.getDouble(3);
-                int gnum = rs.getInt(4);
-
-                Goods goods = new Goods(gid, gname, gprice, gnum);
-                goodsList.add(goods);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+                goodsList = session.selectList("fuzzyFindGoodsByName", nameGet);
+                break;
+            default:
+                break;
         }
         return goodsList;
     }
-
-    public void closeConnection() {
-        DatebaseClose.addClose(pstmt, conn);
+    public void close() {
+        session.commit();
+        session.close();
     }
+
 }

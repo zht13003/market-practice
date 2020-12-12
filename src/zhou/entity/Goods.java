@@ -45,6 +45,7 @@ public class Goods {
         this.gid = gid;
         this.goodNum 	= goodNum;
     }
+    public Goods() {}
 
     public int getGid()
     {

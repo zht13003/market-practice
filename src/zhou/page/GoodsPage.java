@@ -4,7 +4,8 @@ import zhou.tool.ScannerChoice;
 import zhou.Dao.GoodsDao;
 import zhou.entity.Goods;
 
-import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * 操作商品界面
@@ -17,7 +18,7 @@ public class GoodsPage extends ScannerChoice{
      * 在对象GoodsPage被初始化时，静态对象goodsDao被初始化
      * 在调用GoodsPage的静态方法前，GoodsPage被初始化
      */
-    private static GoodsDao goodsDao = new GoodsDao();
+    private static final GoodsDao goodsDao = new GoodsDao();
 
     /**
      * 添加商品页面
@@ -164,7 +165,7 @@ public class GoodsPage extends ScannerChoice{
                     System.out.println("\t\t正在执行商品  关键字  查询操作\n");
                     System.out.println("\n请输入商品关键字");
                 }
-                ArrayList<Goods> goodsList = goodsDao.queryGoods(choice);
+                List<Goods> goodsList = goodsDao.queryGoods(choice);
                 if (goodsList == null || goodsList.size() <= 0)
                 {
                     System.err.println("\n\t!!您查询的商品不存在!!\n");
@@ -172,7 +173,7 @@ public class GoodsPage extends ScannerChoice{
                 }
                 System.out.println("\t\t\t\t\t商品列表\n\n");
                 System.out.println("\t商品编号\t\t商品名称\t\t商品价格\t\t商品数量\t\t备注\n");
-                for(int i = 0, length = goodsList.size(); i < length; i++) {
+                for(int i = 0, length = Objects.requireNonNull(goodsList).size(); i < length; i++) {
                     Goods goods = goodsList.get(i);
                     System.out.print("\t" + goods.getGid()+"\t\t" +
                             goods.getGoodName() + "\t\t" +
@@ -215,7 +216,7 @@ public class GoodsPage extends ScannerChoice{
      */
     public static void displayGoodsPage() {
         System.out.println("\t\t\t\t\t所有商品列表\n\n");
-        ArrayList<Goods> goodsList = goodsDao.displayGoods();
+        List<Goods> goodsList = goodsDao.displayGoods();
 
         if(goodsList.size() <= 0) {
             System.err.println("！库存为空！");
@@ -253,11 +254,8 @@ public class GoodsPage extends ScannerChoice{
             }
         }
     }
-
-    /**
-     * 关闭数据库连接
-     */
     public static void close() {
-        goodsDao.closeConnection();
+        goodsDao.close();
     }
+
 }

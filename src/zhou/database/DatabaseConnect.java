@@ -1,19 +1,41 @@
 package zhou.database;
-import java.sql.DriverManager;
-import java.sql.Connection;
-import java.util.Collection;
+
+import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.session.SqlSessionFactoryBuilder;
+
+import java.io.IOException;
+import java.io.InputStream;
+
 
 /**
  * @author zhouh
- * 2020-12-7
- * 原代码中，每次对数据库进行操作都需要调用一次下面函数进行连接，然后关闭
- * 此处修改为了单例模式，并在退出程序时再进行关闭操作，使得程序只进行一次连接与关闭
+ * 2020-12-12
+ * 使用Mybatis代替了JDBC
  */
 public class DatabaseConnect {
-    private static Connection connection = null;
+    private static SqlSession session = null;
 
-    public static Connection getConnection() {
+    public static SqlSession getSession() {
+        if(session == null) {
+            String resource = "zhou/Mybatis-config.xml";
+            InputStream inputStream;
+
+            {
+                try {
+                    inputStream = Resources.getResourceAsStream(resource);
+                    SqlSessionFactory sqlSessionFactory = new SqlSessionFactoryBuilder().build(inputStream);
+                    session = sqlSessionFactory.openSession();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        return session;
+        /*
         if(connection == null) {
+            System.out.println("连接数据库...");
             String url = "jdbc:mysql://127.0.0.1:3306/market?serverTimezone=UTC";
             String userName = "root";
             String password = "26813003";
@@ -26,5 +48,6 @@ public class DatabaseConnect {
             }
         }
         return connection;
+        */
     }
 }

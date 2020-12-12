@@ -1,12 +1,10 @@
 package zhou.tool;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.List;
 
+import org.apache.ibatis.session.SqlSession;
 import zhou.database.DatabaseConnect;
-import zhou.database.DatebaseClose;
 import zhou.tool.ScannerChoice;
 import zhou.entity.Goods;
 
@@ -14,9 +12,7 @@ import zhou.entity.Goods;
  * @author zhouh
  */
 public final class QueryPrint {
-    Connection conn  = DatabaseConnect.getConnection();
-    PreparedStatement pstmt = null;
-    ResultSet rs = null;
+    private static SqlSession session = DatabaseConnect.getSession();
 
     /**
      * 根据商品ID或商品名称来查询商品
@@ -24,29 +20,9 @@ public final class QueryPrint {
      * @param goodName
      * @return
      */
-    public ArrayList<Goods> queryGoodsKey(int goodID, String goodName) {
-        ArrayList<Goods> goodsList = new ArrayList<>();
-
-        String sql = "SELECT * FROM GOODS WHERE GID=? OR GNAME=?";
-
-        try {
-            pstmt = conn.prepareStatement(sql);
-            pstmt.setInt(1, goodID);
-            pstmt.setString(2, goodName);
-            rs = pstmt.executeQuery();
-            while (rs.next())
-            {
-                int gid = rs.getInt("gid");
-                String gname = rs.getString(2);
-                double gprice = rs.getDouble(3);
-                int gnum = rs.getInt(4);
-
-                Goods goods = new Goods(gid,gname,gprice,gnum);
-                goodsList.add(goods);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public static List<Goods> queryGoodsKey(int goodID, String goodName) {
+        List<Goods> goodsList = new ArrayList<>();
+        goodsList.add(session.selectOne("findGoodsByName", goodName));
         return goodsList;
     }
 
@@ -58,9 +34,9 @@ public final class QueryPrint {
     public static int query(String operator) {
         int gid = -1;
         String shopping = ScannerChoice.scannerInfoString();
-        ArrayList<Goods> goodsList = new QueryPrint().queryGoodsKey(gid, shopping);
+        List<Goods> goodsList = QueryPrint.queryGoodsKey(gid, shopping);
 
-        if (goodsList == null || goodsList.size() <= 0) {
+        if (goodsList.size() <= 0) {
             System.err.println("\t！！查无此商品 ！！");
             ScannerChoice.changedInfoNext(operator);
         }
@@ -87,4 +63,6 @@ public final class QueryPrint {
         }
         return gid;
     }
+
+
 }
